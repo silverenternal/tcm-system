@@ -131,14 +131,21 @@ public class PatientAPI {
     @GetMapping("/{id}")
     public ResponseEntity<Patient> getPatient(@PathVariable Long id) {
         Optional<Patient> patient = patientService.getPatientById(id);
-        return patient.map(ResponseEntity::ok)
-                      .orElse(ResponseEntity.notFound().build());
+        if (patient.isPresent()) {
+            return ResponseEntity.ok(patient.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
     
     @GetMapping("/id-card/{idCard}")
     public ResponseEntity<Patient> getPatientByIdCard(@PathVariable String idCard) {
         Patient patient = patientService.findByPatientIdCard(idCard);
-        return patient != null ? ResponseEntity.ok(patient) : ResponseEntity.notFound().build();
+        if (patient != null) {
+            return ResponseEntity.ok(patient);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 ```
@@ -171,9 +178,21 @@ public class PatientAPI {
 在`DatabaseConfig.java`中，有一处使用了`Statement`对象：
 
 ```java
-Statement statement = connection.createStatement();
-String alterTableSQL = "ALTER TABLE patients ALTER COLUMN id_card TYPE VARCHAR(50)";
-statement.executeUpdate(alterTableSQL);
+@EventListener(ApplicationReadyEvent.class)
+public void updateDatabaseSchema() {
+    try (Connection connection = dataSource.getConnection();
+         Statement statement = connection.createStatement()) {
+        
+        String alterTableSQL = "ALTER TABLE patients ALTER COLUMN id_card TYPE VARCHAR(50)";
+        try {
+            statement.executeUpdate(alterTableSQL);
+        } catch (SQLException e) {
+            // 处理异常
+        }
+    } catch (SQLException e) {
+        // 处理连接错误
+    }
+}
 ```
 
 **安全性分析：**
