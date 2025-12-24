@@ -237,7 +237,7 @@ public void updateDatabaseSchema() {
 
 ```bash
 # 尝试使用恶意输入测试API
-curl -X GET "http://localhost:58081/api/patients/id-card/' OR '1'='1"
+curl -X GET "http://localhost:58080/api/patients/id-card/' OR '1'='1"
 
 # 预期结果：返回404或空结果，而不是所有患者数据
 # 因为 "' OR '1'='1" 会被当作普通字符串查询，而不是SQL代码

@@ -212,7 +212,7 @@ tcm-hospital-management/
 4. **输入验证** - Service层对用户输入进行验证和清洗
 5. **类型安全** - 使用强类型实体和Repository接口
 
-**详细说明**: 请参阅 [SQL注入防护说明.md](./SQL注入防护说明.md) 了解完整的安全机制和代码示例。
+**详细说明**: 请参阅 [SQL_INJECTION_PREVENTION.md](./SQL_INJECTION_PREVENTION.md) 或 [SQL注入防护说明.md](./SQL注入防护说明.md) 了解完整的安全机制和代码示例。
 
 ### 安全特性
 

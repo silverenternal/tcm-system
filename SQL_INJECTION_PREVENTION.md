@@ -237,7 +237,7 @@ You can verify SQL injection protection through:
 
 ```bash
 # Test API with malicious input
-curl -X GET "http://localhost:58081/api/patients/id-card/' OR '1'='1"
+curl -X GET "http://localhost:58080/api/patients/id-card/' OR '1'='1"
 
 # Expected result: Returns 404 or empty result, not all patient data
 # Because "' OR '1'='1" is treated as a regular string query, not SQL code
