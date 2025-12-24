@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>中医院管理系统 - 简化版</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>测试页面 - {{ message }}</h1>
+    <p>如果能看到这段文字，说明 Vue 应用正常工作</p>
+    <button @click="testClick" class="btn btn-primary">测试按钮</button>
+  </div>
+
+  <!-- Vue 2 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <!-- Vue Router -->
+  <script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.4/dist/vue-router.min.js"></script>
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.27.2/dist/axios.min.js"></script>
+  <!-- jQuery + Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // 定义全局API基础URL
+    window.API_BASE_URL = 'http://localhost:58081';
+
+    // 测试用的简化版 Vue 实例
+    const testApp = new Vue({
+      el: '#app',
+      data: {
+        message: 'Vue 工作正常!'
+      },
+      methods: {
+        testClick() {
+          alert('按钮点击事件工作正常!');
+        }
+      }
+    });
+
+    console.log('Vue 简化版应用已初始化');
+  </script>
+</body>
+</html>

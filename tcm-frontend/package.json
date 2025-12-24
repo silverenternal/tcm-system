@@ -1,0 +1,23 @@
+{
+  "name": "tcm-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for TCM Hospital Management System using Vue 2",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx http-server ./public -p 8080 -c-1",
+    "start": "npx http-server ./public -p 8080 -c-1"
+  },
+  "keywords": [
+    "vue2",
+    "tcm",
+    "hospital",
+    "management",
+    "system"
+  ],
+  "author": "TCM Hospital Management System",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

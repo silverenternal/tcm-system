@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>中医院管理系统</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .sidebar {
+      min-height: 100vh;
+      background-color: #343a40;
+      color: white;
+    }
+    .main-content {
+      padding: 20px;
+    }
+    .header {
+      background-color: #007bff;
+      color: white;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+    }
+    .card {
+      margin-bottom: 20px;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+    .table th {
+      border-top: none;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .btn {
+      margin-right: 5px;
+    }
+    .diagnostic-image {
+      max-width: 200px;
+      max-height: 200px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+    }
+    .tongue-image {
+      border: 2px solid #28a745;
+    }
+    .face-image {
+      border: 2px solid #ffc107;
+    }
+    .pulse-image {
+      border: 2px solid #dc3545;
+    }
+
+    /* 自诊模式聊天界面样式 */
+    .chat-container {
+      max-height: 60vh;
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      min-height: 300px;
+      max-height: 50vh;
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+      .chat-messages {
+        min-height: 40vh;
+        max-height: 40vh;
+      }
+
+      .chat-container {
+        min-height: 50vh;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+      }
+
+      .sidebar.show {
+        left: 0;
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+      }
+
+      .main-content {
+        padding: 10px;
+      }
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+      .chat-messages {
+        min-height: 40vh;
+        max-height: 40vh;
+      }
+
+      .chat-container {
+        min-height: 50vh;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+      }
+
+      .sidebar.show {
+        left: 0;
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+      }
+
+      .main-content {
+        padding: 10px;
+      }
+    }
+
+    .message {
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      max-width: 80%;
+    }
+
+    .message.system {
+      background-color: #e3f2fd;
+      margin-right: auto;
+    }
+
+    .message.user {
+      background-color: #f0f0f0;
+      margin-left: auto;
+    }
+
+    .message-content {
+      word-wrap: break-word;
+      white-space: pre-wrap; /* 保留换行符并自动换行 */
+    }
+
+    .chat-input-area {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .image-upload-section {
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="container-fluid">
+      <!-- 移动端顶部导航 -->
+      <nav class="navbar navbar-dark bg-dark d-md-none d-lg-none d-xl-none">
+        <a class="navbar-brand" href="#">TCM系统</a>
+        <button class="navbar-toggler" type="button" id="sidebarToggle">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </nav>
+
+      <div class="row">
+        <!-- 侧边栏 -->
+        <nav id="sidebarMenu" class="col-md-2 d-md-block sidebar">
+          <div class="sidebar-sticky pt-3">
+            <div class="text-center mb-4">
+              <h4 class="text-white">TCM系统</h4>
+              <p class="text-muted">中医院管理系统</p>
+            </div>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#" onclick="event.preventDefault(); navigateTo('/self-diagnosis');">
+                  <i class="fa fa-user-plus"></i> 患者自诊
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#" onclick="event.preventDefault(); navigateTo('/patients');">
+                  <i class="fa fa-users"></i> 患者管理
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#" onclick="event.preventDefault(); navigateTo('/doctors');">
+                  <i class="fa fa-user-md"></i> 医生管理
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#" onclick="event.preventDefault(); navigateTo('/visits');">
+                  <i class="fa fa-stethoscope"></i> 就诊记录
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#" onclick="event.preventDefault(); navigateTo('/prescriptions');">
+                  <i class="fa fa-file-text"></i> 处方管理
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#" onclick="event.preventDefault(); navigateTo('/diagnostic-images');">
+                  <i class="fa fa-picture-o"></i> 诊断图片
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="#" onclick="event.preventDefault(); navigateTo('/dashboard');">
+                  <i class="fa fa-dashboard"></i> 仪表板
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- 遮罩层 -->
+        <div id="overlay" class="overlay"></div>
+
+        <main class="col-md-10 ml-sm-auto px-md-4">
+          <div class="header d-md-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0 d-md-none d-lg-block">中医院管理系统</h5>
+            <div class="text-right">
+              <span class="text-white d-none d-md-inline">当前时间: <span id="current-time"></span></span>
+            </div>
+          </div>
+          <div id="main-content">
+            <router-view></router-view>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue 2 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <!-- Vue Router -->
+  <script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.4/dist/vue-router.min.js"></script>
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.27.2/dist/axios.min.js"></script>
+  <!-- jQuery + Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="js/app.js"></script>
+  <script>
+    // 调试：确保navigateTo函数可用
+    // 注意：现在Vue应用使用el:'#app'自动挂载，不需要手动调用$mount
+    window.navigateTo = function(route) {
+      console.log('navigateTo被调用，路径:', route);
+      if (window.vueApp && window.vueApp.$router) {
+        console.log('导航到:', route);
+        window.vueApp.$router.push(route);
+      } else {
+        console.error('Vue应用或路由未初始化，延迟重试...');
+        setTimeout(() => {
+          if (window.vueApp && window.vueApp.$router) {
+            window.vueApp.$router.push(route);
+            console.log('延迟导航到:', route);
+          } else {
+            console.error('Vue应用仍未就绪，导航失败');
+          }
+        }, 100);
+      }
+    };
+
+    // 移动端侧边栏功能
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.getElementById('sidebarMenu');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const overlay = document.getElementById('overlay');
+
+      if (sidebarToggle && sidebar && overlay) {
+        // 切换侧边栏
+        sidebarToggle.addEventListener('click', function() {
+          sidebar.classList.toggle('show');
+          if (sidebar.classList.contains('show')) {
+            overlay.style.display = 'block';
+          } else {
+            overlay.style.display = 'none';
+          }
+        });
+
+        // 点击遮罩层关闭侧边栏
+        overlay.addEventListener('click', function() {
+          sidebar.classList.remove('show');
+          overlay.style.display = 'none';
+        });
+
+        // 点击侧边栏链接后关闭侧边栏（移动端）
+        const sidebarLinks = sidebar.querySelectorAll('a');
+        sidebarLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            if (window.innerWidth < 768) {
+              sidebar.classList.remove('show');
+              overlay.style.display = 'none';
+            }
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html>
