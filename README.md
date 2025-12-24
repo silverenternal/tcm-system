@@ -1,6 +1,6 @@
 # 中医院管理系统 (TCM Hospital Management System)
 
-基于 Spring Boot 和 PostgreSQL 的中医院管理系统，支持完整的医院管理功能，并集成了中医诊断图片处理功能。
+基于 Spring Boot 和 MYSQL 的中医院管理系统，支持完整的医院管理功能，并集成了中医诊断图片处理功能。
 
 ## 功能特性
 
